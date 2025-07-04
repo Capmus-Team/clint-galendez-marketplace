@@ -192,7 +192,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## 🤝 Support
 
-For support, email [your-email] or create an issue in this repository.
+For support, email [galendez.clintjonathan@gmail.com](galendez.clintjonathan@gmail.com) or create an issue in this repository.
 
 ---
 
