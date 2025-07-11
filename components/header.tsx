@@ -1,6 +1,7 @@
 "use client"
-import { MessageCircle, Bell, User, Menu } from "lucide-react"
+import { MessageCircle, Bell, Menu } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { UserMenu } from "@/components/auth/user-menu"
 import { useRouter } from "next/navigation"
 
 interface HeaderProps {
@@ -51,9 +52,7 @@ export function Header({ onMenuClick, onLogoClick }: HeaderProps) {
             <Button variant="ghost" size="icon" className="aero-button rounded-full w-8 h-8 md:w-10 md:h-10">
               <Bell className="w-4 h-4 md:w-5 md:h-5" />
             </Button>
-            <Button variant="ghost" size="icon" className="aero-button rounded-full w-8 h-8 md:w-10 md:h-10">
-              <User className="w-4 h-4 md:w-5 md:h-5" />
-            </Button>
+            <UserMenu />
           </div>
         </div>
       </div>
