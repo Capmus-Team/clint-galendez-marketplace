@@ -5,6 +5,7 @@ import type React from "react"
 import { useState, useEffect } from "react"
 import { Header } from "@/components/header"
 import { Sidebar } from "@/components/sidebar"
+import { ProtectedRoute } from "@/components/auth/protected-route"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -170,11 +171,12 @@ export default function CreateListingPage() {
   }
 
   return (
-    <div className="min-h-screen">
-      <Header onMenuClick={() => setSidebarOpen(true)} />
-      <div className="flex">
-        <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-        <main className="flex-1 p-3 md:p-6 md:ml-64">
+    <ProtectedRoute>
+      <div className="min-h-screen">
+        <Header onMenuClick={() => setSidebarOpen(true)} />
+        <div className="flex">
+          <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+          <main className="flex-1 p-3 md:p-6 md:ml-64">
           <div className="max-w-7xl mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-8">
               {/* Form */}
@@ -422,5 +424,6 @@ export default function CreateListingPage() {
         </main>
       </div>
     </div>
+    </ProtectedRoute>
   )
 }
