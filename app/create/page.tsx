@@ -15,6 +15,7 @@ import { Upload, X } from "lucide-react"
 import { supabase } from "@/lib/supabase"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
+import { useEffect as useAuthEffect } from "react"
 
 const categories = [
   "vehicles",
@@ -51,6 +52,15 @@ export default function CreateListingPage() {
     contactEmail: "",
     description: "",
   })
+  const [userId, setUserId] = useState<string>("")
+
+  useAuthEffect(() => {
+    const fetchUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user) setUserId(user.id)
+    }
+    fetchUser()
+  }, [])
 
   useEffect(() => {
     // Cleanup function to revoke object URL only if it's a blob URL
@@ -128,6 +138,10 @@ export default function CreateListingPage() {
       alert("Please fill in all required fields")
       return
     }
+    if (!userId) {
+      alert("User not authenticated. Please log in.")
+      return
+    }
 
     try {
       setLoading(true)
@@ -148,6 +162,7 @@ export default function CreateListingPage() {
             location: formData.location,
             contact_email: formData.contactEmail,
             image_url: imageUrl,
+            user_id: userId,
           },
         ])
         .select()
@@ -157,7 +172,7 @@ export default function CreateListingPage() {
       const newListing = data?.[0]
       if (newListing) {
         alert("Listing created successfully!")
-        router.push(`/item/${newListing.id}`)
+        router.push(`/create/stripe-setup/${newListing.id}`)
       } else {
         alert("Listing created successfully!")
         router.push("/")
