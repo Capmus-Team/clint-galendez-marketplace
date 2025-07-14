@@ -13,6 +13,7 @@ import { ArrowLeft } from "lucide-react"
 import { supabase, type Listing } from "@/lib/supabase"
 import Image from "next/image"
 import Link from "next/link"
+import { BuyListingButton } from "@/components/stripe/buy-listing-button"
 
 // Helper function to format relative time
 const formatRelativeTime = (timestamp: string): string => {
@@ -231,6 +232,22 @@ export default function ItemDetailPage() {
             <div>
               <h3 className="text-base md:text-lg font-semibold text-gray-800 mb-2">Seller Information</h3>
               <p className="text-gray-600 text-sm md:text-base">{listing.contact_email}</p>
+            </div>
+
+            {/* Buy Now Button for Buyers */}
+            <div className="my-6">
+              <div className="category-card rounded-2xl p-4 md:p-6">
+                <h3 className="text-base md:text-lg font-semibold text-gray-800 mb-3 md:mb-4">Buy Now</h3>
+                {/* Modular Stripe Buy Button */}
+                <BuyListingButton
+                  listingId={listing.id}
+                  sellerId={listing.user_id}
+                  listingTitle={listing.title}
+                  price={listing.price}
+                  currency="USD"
+                  className="w-full"
+                />
+              </div>
             </div>
 
             <div className="category-card rounded-2xl p-4 md:p-6">
