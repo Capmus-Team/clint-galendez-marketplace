@@ -14,18 +14,6 @@ export function AuthLayout({ children }: AuthLayoutProps) {
       {/* Left side - Form */}
       <div className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8">
         <div className="w-full max-w-md">
-          <div className="mb-8">
-            <Link href="/" className="flex items-center space-x-2">
-              <Image
-                src="/placeholder-logo.svg"
-                alt="Marketplace Logo"
-                width={32}
-                height={32}
-                className="h-8 w-8"
-              />
-              <span className="text-xl font-bold">Marketplace</span>
-            </Link>
-          </div>
           {children}
         </div>
       </div>
@@ -40,15 +28,6 @@ export function AuthLayout({ children }: AuthLayoutProps) {
             <p className="text-lg text-blue-100">
               Discover amazing products, connect with sellers, and find exactly what you're looking for.
             </p>
-          </div>
-          <div className="relative">
-            <Image
-              src="/placeholder.svg"
-              alt="Marketplace illustration"
-              width={400}
-              height={300}
-              className="rounded-lg shadow-xl"
-            />
           </div>
         </div>
       </div>
