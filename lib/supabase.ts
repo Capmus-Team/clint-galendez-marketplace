@@ -28,3 +28,18 @@ export interface Message {
   message: string
   created_at: string
 }
+
+export interface PaymentTransaction {
+  id: string
+  listing_id: string
+  buyer_id: string
+  seller_id: string
+  stripe_payment_intent_id: string
+  stripe_checkout_session_id?: string
+  amount: number
+  currency: string
+  status: 'pending' | 'succeeded' | 'failed' | 'canceled'
+  stripe_account_id: string
+  created_at: string
+  updated_at: string
+}
