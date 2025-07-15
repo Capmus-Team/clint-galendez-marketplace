@@ -134,10 +134,11 @@ export class StripeDatabase {
     listingId: string,
     buyerId: string,
     sellerId: string,
-    stripePaymentIntentId: string,
+    stripeApplicationFeeId: string,
     amount: number,
     currency: string,
     stripeAccountId: string,
+    stripeChargeId?: string,
     checkoutSessionId?: string
   ): Promise<PaymentTransaction> {
     const { data, error } = await supabaseAdmin
@@ -146,7 +147,8 @@ export class StripeDatabase {
         listing_id: listingId,
         buyer_id: buyerId,
         seller_id: sellerId,
-        stripe_payment_intent_id: stripePaymentIntentId,
+        stripe_application_fee_id: stripeApplicationFeeId,
+        stripe_charge_id: stripeChargeId,
         stripe_checkout_session_id: checkoutSessionId,
         amount,
         currency,
@@ -163,13 +165,13 @@ export class StripeDatabase {
   }
 
   static async updatePaymentTransaction(
-    stripePaymentIntentId: string,
-    updates: Partial<Pick<PaymentTransaction, 'status' | 'stripe_checkout_session_id'>>
+    stripeApplicationFeeId: string,
+    updates: Partial<Pick<PaymentTransaction, 'status' | 'stripe_checkout_session_id' | 'stripe_charge_id'>>
   ): Promise<PaymentTransaction> {
     const { data, error } = await supabaseAdmin
       .from('payment_transactions')
       .update(updates)
-      .eq('stripe_payment_intent_id', stripePaymentIntentId)
+      .eq('stripe_application_fee_id', stripeApplicationFeeId)
       .select()
       .single();
 
@@ -181,12 +183,12 @@ export class StripeDatabase {
   }
 
   static async getPaymentTransaction(
-    stripePaymentIntentId: string
+    stripeApplicationFeeId: string
   ): Promise<PaymentTransaction | null> {
     const { data, error } = await supabaseAdmin
       .from('payment_transactions')
       .select('*')
-      .eq('stripe_payment_intent_id', stripePaymentIntentId)
+      .eq('stripe_application_fee_id', stripeApplicationFeeId)
       .single();
 
     if (error && error.code !== 'PGRST116') {
