@@ -62,7 +62,11 @@ export default function HomePage() {
   const fetchListings = async (filterCategory?: string | null) => {
     try {
       setLoading(true)
-      let query = supabase.from("listings").select("*").order("created_at", { ascending: false })
+      let query = supabase
+        .from("listings")
+        .select("*")
+        .eq("status", "available") // Only show available listings
+        .order("created_at", { ascending: false })
 
       if (filterCategory) {
         query = query.eq("category", filterCategory)
