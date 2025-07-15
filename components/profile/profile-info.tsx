@@ -5,10 +5,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Mail, Calendar, MapPin, Edit } from "lucide-react"
+import { Mail, Calendar, MapPin, Edit, Phone, Globe } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 export function ProfileInfo() {
   const { user } = useAuth()
+  const router = useRouter()
 
   if (!user) {
     return null
@@ -25,6 +27,10 @@ export function ProfileInfo() {
     month: 'long',
     day: 'numeric'
   })
+
+  const handleEditClick = () => {
+    router.push('/profile/edit')
+  }
 
   return (
     <Card className="backdrop-blur-md bg-white/80 border-white/20 shadow-lg">
@@ -49,7 +55,7 @@ export function ProfileInfo() {
               </Badge>
             </div>
           </div>
-          <Button variant="outline" size="sm" className="flex items-center space-x-2">
+          <Button variant="outline" size="sm" className="flex items-center space-x-2" onClick={handleEditClick}>
             <Edit className="w-4 h-4" />
             <span>Edit Profile</span>
           </Button>
@@ -81,6 +87,33 @@ export function ProfileInfo() {
               <p className="font-medium">{(user.user_metadata as any)?.location || 'Not specified'}</p>
             </div>
           </div>
+
+          {(user.user_metadata as any)?.phone && (
+            <div className="flex items-center space-x-3">
+              <Phone className="w-5 h-5 text-gray-500" />
+              <div>
+                <p className="text-sm text-gray-500">Phone</p>
+                <p className="font-medium">{(user.user_metadata as any).phone}</p>
+              </div>
+            </div>
+          )}
+
+          {(user.user_metadata as any)?.website && (
+            <div className="flex items-center space-x-3 md:col-span-2">
+              <Globe className="w-5 h-5 text-gray-500" />
+              <div>
+                <p className="text-sm text-gray-500">Website</p>
+                <a 
+                  href={(user.user_metadata as any).website} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="font-medium text-blue-600 hover:text-blue-800 hover:underline"
+                >
+                  {(user.user_metadata as any).website}
+                </a>
+              </div>
+            </div>
+          )}
         </div>
         
         {(user.user_metadata as any)?.bio && (
