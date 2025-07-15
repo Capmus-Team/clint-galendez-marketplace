@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe/config';
-import { StripeService } from '@/lib/stripe';
+import { ApplicationFeeWebhookService } from '@/lib/stripe/application-fee-webhook';
 
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
@@ -21,16 +21,41 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Only handle application_fee.created event
+    // Handle different webhook events
     switch (event.type) {
       case 'application_fee.created': {
         const applicationFee = event.data.object;
         console.log('Application fee created:', applicationFee.id);
-        // TODO: Add your platform-specific logic here
+        
+        try {
+          await ApplicationFeeWebhookService.handleApplicationFeeCreated(applicationFee);
+          console.log(`Successfully processed application fee: ${applicationFee.id}`);
+        } catch (error) {
+          console.error(`Error processing application fee ${applicationFee.id}:`, error);
+          return NextResponse.json(
+            { error: 'Failed to process application fee' },
+            { status: 500 }
+          );
+        }
         break;
       }
+      
+      case 'application_fee.refunded': {
+        const applicationFee = event.data.object;
+        console.log('Application fee refunded:', applicationFee.id);
+        
+        try {
+          await ApplicationFeeWebhookService.handleApplicationFeeRefunded(applicationFee);
+          console.log(`Successfully processed application fee refund: ${applicationFee.id}`);
+        } catch (error) {
+          console.error(`Error processing application fee refund ${applicationFee.id}:`, error);
+          // Don't fail the webhook for refund processing errors
+        }
+        break;
+      }
+
       default:
-        console.log(`Unhandled event type ${event.type}`);
+        console.log(`Unhandled event type: ${event.type}`);
     }
 
     return NextResponse.json({ received: true });
