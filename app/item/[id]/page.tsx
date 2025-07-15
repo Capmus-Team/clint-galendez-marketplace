@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
+import { ListingStatusIndicator } from "@/components/listings"
 import { ArrowLeft } from "lucide-react"
 import { supabase, type Listing } from "@/lib/supabase"
 import Image from "next/image"
@@ -207,7 +208,10 @@ export default function ItemDetailPage() {
           {/* Details */}
           <div className="space-y-4 md:space-y-6">
             <div>
-              <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">{listing.title}</h2>
+              <div className="flex items-start justify-between mb-2">
+                <h2 className="text-2xl md:text-3xl font-bold text-gray-800">{listing.title}</h2>
+                <ListingStatusIndicator status={listing.status as any} size="lg" />
+              </div>
               <p className="text-2xl md:text-3xl font-bold text-gray-800">${listing.price}</p>
               <div className="text-xs md:text-sm text-gray-600 mt-2 space-y-1">
                 <p>{listing.created_at ? formatRelativeTime(listing.created_at) : "Listed recently"}</p>
@@ -234,21 +238,23 @@ export default function ItemDetailPage() {
               <p className="text-gray-600 text-sm md:text-base">{listing.contact_email}</p>
             </div>
 
-            {/* Buy Now Button for Buyers */}
-            <div className="my-6">
-              <div className="category-card rounded-2xl p-4 md:p-6">
-                <h3 className="text-base md:text-lg font-semibold text-gray-800 mb-3 md:mb-4">Buy Now</h3>
-                {/* Modular Stripe Buy Button */}
-                <BuyListingButton
-                  listingId={listing.id}
-                  sellerId={listing.user_id}
-                  listingTitle={listing.title}
-                  price={listing.price}
-                  currency="USD"
-                  className="w-full"
-                />
+            {/* Buy Now Button for Buyers - Only show if available */}
+            {listing.status === 'available' && (
+              <div className="my-6">
+                <div className="category-card rounded-2xl p-4 md:p-6">
+                  <h3 className="text-base md:text-lg font-semibold text-gray-800 mb-3 md:mb-4">Buy Now</h3>
+                  {/* Modular Stripe Buy Button */}
+                  <BuyListingButton
+                    listingId={listing.id}
+                    sellerId={listing.user_id}
+                    listingTitle={listing.title}
+                    price={listing.price}
+                    currency="USD"
+                    className="w-full"
+                  />
+                </div>
               </div>
-            </div>
+            )}
 
             <div className="category-card rounded-2xl p-4 md:p-6">
               <h3 className="text-base md:text-lg font-semibold text-gray-800 mb-3 md:mb-4">Message Seller</h3>
