@@ -27,7 +27,8 @@ export interface PaymentTransaction {
   listing_id: string;
   buyer_id: string;
   seller_id: string;
-  stripe_payment_intent_id: string;
+  stripe_application_fee_id: string; // Changed from stripe_payment_intent_id
+  stripe_charge_id?: string; // Added to track the underlying charge
   stripe_checkout_session_id?: string;
   amount: number;
   currency: string;
