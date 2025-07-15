@@ -38,7 +38,7 @@ export class StripePaymentService {
       // Calculate application fee (platform commission)
       const applicationFee = Math.round((price.unit_amount || 0) * (STRIPE_CONFIG.applicationFeePercent / 100));
 
-      // Create Checkout Session
+      // Create Checkout Session with application fee
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
         line_items: [
@@ -67,19 +67,9 @@ export class StripePaymentService {
         stripeAccount: sellerAccount.stripe_account_id,
       });
 
-      // Create payment transaction record
-      if (session.payment_intent) {
-        await StripeDatabase.createPaymentTransaction(
-          request.listingId,
-          buyerId,
-          request.sellerId,
-          session.payment_intent as string,
-          price.unit_amount || 0,
-          price.currency,
-          sellerAccount.stripe_account_id,
-          session.id
-        );
-      }
+      // Mark listing as pending while payment is being processed
+      const { ListingService } = await import('../listings/listing-service');
+      await ListingService.markListingAsPending(request.listingId);
 
       return {
         sessionId: session.id,
@@ -238,6 +228,18 @@ export class StripePaymentService {
     reason?: string;
   }> {
     try {
+      // First check if listing exists and is available
+      const { ListingService } = await import('../listings/listing-service');
+      const listing = await ListingService.getListingById(listingId);
+      
+      if (!listing) {
+        return { canPurchase: false, reason: 'Listing not found' };
+      }
+
+      if (listing.status !== 'available') {
+        return { canPurchase: false, reason: `This listing is ${listing.status}` };
+      }
+
       // Get listing product
       const listingProduct = await StripeDatabase.getListingStripeProduct(listingId);
       
