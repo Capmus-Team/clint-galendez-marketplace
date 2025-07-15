@@ -82,7 +82,7 @@ export default function PurchaseSuccessPage() {
           
           <div className="space-y-2">
             <Button asChild className="w-full">
-              <Link href="/profile">
+              <Link href="/purchased-items">
                 <Receipt className="mr-2 h-4 w-4" />
                 View My Purchases
               </Link>
