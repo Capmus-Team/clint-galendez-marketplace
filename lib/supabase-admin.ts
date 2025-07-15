@@ -24,6 +24,7 @@ export interface Listing {
   location?: string
   contact_email: string
   image_url?: string
+  status: string // 'available' | 'sold' | 'pending'
   created_at: string
   updated_at: string
   user_id: string // seller's user id
