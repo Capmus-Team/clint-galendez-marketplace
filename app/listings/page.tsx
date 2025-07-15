@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { Header } from "@/components/header"
 import { Sidebar } from "@/components/sidebar"
 import { Button } from "@/components/ui/button"
+import { ListingStatusBadge } from "@/components/listings"
 import { supabase, type Listing } from "@/lib/supabase"
 import Link from "next/link"
 import Image from "next/image"
@@ -105,7 +106,10 @@ export default function YourListingsPage() {
                       )}
                     </div>
                     <div className="space-y-1 md:space-y-2">
-                      <h3 className="font-semibold text-base md:text-lg text-gray-800 truncate">${listing.price}</h3>
+                      <div className="flex items-center justify-between">
+                        <h3 className="font-semibold text-base md:text-lg text-gray-800 truncate">${listing.price}</h3>
+                        <ListingStatusBadge status={listing.status as any} />
+                      </div>
                       <p className="text-gray-600 font-medium truncate text-sm md:text-base">{listing.title}</p>
                       <p className="text-xs md:text-sm text-gray-500">
                         {new Date(listing.created_at).toLocaleDateString()}
