@@ -21,6 +21,7 @@ import {
   Briefcase,
   Puzzle,
   X,
+  ShoppingBag,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { usePathname, useSearchParams } from "next/navigation"
@@ -87,10 +88,25 @@ export function Sidebar({ isOpen = true, onClose }: SidebarProps) {
             <Link href="/listings" onClick={onClose}>
               <Button
                 variant="ghost"
-                className="w-full justify-start hover:bg-white/50 text-gray-700 hover:text-gray-900 text-sm md:text-base"
+                className={cn(
+                  "w-full justify-start hover:bg-white/50 text-gray-700 hover:text-gray-900 text-sm md:text-base",
+                  pathname === "/listings" && "bg-blue-100/70 text-blue-800 hover:bg-blue-100/70 hover:text-blue-800"
+                )}
               >
                 <List className="w-4 h-4 mr-2" />
                 Your listings
+              </Button>
+            </Link>
+            <Link href="/purchased-items" onClick={onClose}>
+              <Button
+                variant="ghost"
+                className={cn(
+                  "w-full justify-start hover:bg-white/50 text-gray-700 hover:text-gray-900 text-sm md:text-base",
+                  pathname === "/purchased-items" && "bg-blue-100/70 text-blue-800 hover:bg-blue-100/70 hover:text-blue-800"
+                )}
+              >
+                <ShoppingBag className="w-4 h-4 mr-2" />
+                Purchased items
               </Button>
             </Link>
             <Link href="/" onClick={onClose}>
